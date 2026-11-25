@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePrime — Avaliação e Pesquisa de Filmes em Cartaz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-escuro: #07090e;
+      --bg-painel: #101420;
+      --bg-card: #161c2c;
+      --borda: rgba(255, 255, 255, 0.12);
+      --dourado: #ffb703;
+      --vermelho-cine: #e63946;
+      --texto: #f8fafc;
+      --texto-suave: #94a3b8;
+      --verde: #10b981;
+      --amarelo: #f59e0b;
+      --vermelho: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-escuro);
+      color: var(--texto);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(114, 9, 183, 0.22) 0%, transparent 40%),
+        radial-gradient(circle at 85% 15%, rgba(230, 57, 70, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(58, 134, 255, 0.12) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* CABEÇALHO */
+    .cabecalho {
+      background: linear-gradient(180deg, rgba(16, 20, 32, 0.95) 0%, rgba(7, 9, 14, 0.85) 100%);
+      border-bottom: 1px solid var(--borda);
+      padding: 24px 0;
+    }
+
+    .cabecalho-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icone {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--vermelho-cine), var(--dourado));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      box-shadow: 0 8px 24px rgba(230, 57, 70, 0.4);
+    }
+
+    .logo-texto h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      line-height: 1;
+      background: linear-gradient(90deg, #ffffff 30%, var(--dourado) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-texto p {
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+    }
+
+    .contato-topo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-zap-contato {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      text-decoration: none;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .btn-zap-contato:hover {
+      background: rgba(16, 185, 129, 0.26);
+      transform: translateY(-1px);
+    }
+
+    /* TÍTULOS DE SEÇÃO */
+    .secao-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0 18px;
+    }
+
+    .secao-header h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .numero-etapa {
+      background: linear-gradient(135deg, var(--dourado), #fb8500);
+      color: #07090e;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    /* VITRINE DE CARTAZES LADO A LADO */
+    .vitrine-filmes {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    .card-aba {
+      background: var(--bg-card);
+      border: 2px solid var(--borda);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      color: var(--texto);
+    }
+
+    .card-aba:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 183, 3, 0.55);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-aba.ativo {
+      border-color: var(--dourado);
+      transform: translateY(-6px);
+      box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.25), 0 18px 36px rgba(0, 0, 0, 0.7);
+    }
+
+    .card-aba.ativo::after {
+      content: "EM FOCO";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--dourado);
+      color: #07090e;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .poster-wrapper {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: #1e2538;
+      overflow: hidden;
+    }
+
+    .poster-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .card-aba:hover .poster-wrapper img {
+      transform: scale(1.05);
+    }
+
+    .card-aba-corpo {
+      padding: 14px;
+      background: linear-gradient(180deg, #161c2c 0%, #101420 100%);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-aba-titulo {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .card-aba-rodape {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--texto-suave);
+    }
+
+    .badge-nota-mini {
+      color: var(--dourado);
+      font-weight: 800;
+      background: rgba(255, 183, 3, 0.12);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* DESTAQUE HORIZONTAL DO FILME SELECIONADO */
+    .banner-filme-ativo {
+      margin-top: 28px;
+      background: linear-gradient(135deg, rgba(22, 28, 44, 0.95) 0%, rgba(16, 20, 32, 0.98) 100%);
+      border: 1px solid var(--borda);
+      border-radius: 22px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 230px 1fr 310px;
+      gap: 28px;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .banner-poster {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 2 / 3;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .banner-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .selo-idade {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #e63946;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .banner-detalhes .tag-genero {
+      display: inline-block;
+      background: rgba(58, 134, 255, 0.16);
+      color: #7cc0ff;
+      border: 1px solid rgba(58, 134, 255, 0.35);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .banner-detalhes h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .banner-detalhes p {
+      color: var(--texto-suave);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .acoes-filme {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-trailer {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #e63946 0%, #d90429 100%);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px 22px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(230, 57, 70, 0.38);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-trailer:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(230, 57, 70, 0.55);
+    }
+
+    .btn-ir-pesquisa {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--texto);
+      border: 1px solid var(--borda);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 13px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .btn-ir-pesquisa:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    /* TERMÔMETRO */
+    .box-termometro {
+      background: rgba(7, 9, 14, 0.65);
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .box-termometro h4 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--texto-suave);
+      margin-bottom: 10px;
+    }
+
+    .score-grande {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .score-grande strong {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--dourado);
+      line-height: 1;
+    }
+
+    .score-grande span {
+      color: var(--texto-suave);
+      font-size: 0.88rem;
+    }
+
+    .linha-barra {
+      margin-bottom: 10px;
+    }
+
+    .linha-barra-texto {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .trilho-barra {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .preenchimento {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.45s ease;
+    }
+
+    .cor-bom { background: linear-gradient(90deg, #10b981, #34d399); }
+    .cor-regular { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .cor-ruim { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+    /* PESQUISA EMBAIXO DE TUDO */
+    .secao-pesquisa-inferior {
+      margin-top: 32px;
+      margin-bottom: 48px;
+      background: var(--bg-painel);
+      border: 1px solid var(--borda);
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    .topo-pesquisa {
+      border-bottom: 1px solid var(--borda);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .topo-pesquisa h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .topo-pesquisa h2 span {
+      color: var(--dourado);
+    }
+
+    .grade-pesquisa-colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .bloco-campo {
+      margin-bottom: 22px;
+    }
+
+    .label-campo {
+      display: block;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .grupo-veredito {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .btn-veredito {
+      background: var(--bg-card);
+      border: 2px solid var(--borda);
+      border-radius: 14px;
+      padding: 16px 10px;
+      color: var(--texto);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-veredito .icone-emoji {
+      font-size: 1.8rem;
+    }
+
+    .btn-veredito small {
+      color: var(--texto-suave);
+      font-size: 0.76rem;
+    }
+
+    .btn-veredito.ativo[data-valor="Bom"] {
+      border-color: var(--verde);
+      background: rgba(16, 185, 129, 0.16);
+    }
+
+    .btn-veredito.ativo[data-valor="Regular"] {
+      border-color: var(--amarelo);
+      background: rgba(245, 158, 11, 0.16);
+    }
+
+    .btn-veredito.ativo[data-valor="Ruim"] {
+      border-color: var(--vermelho);
+      background: rgba(239, 68, 68, 0.16);
+    }
+
+    .card-pergunta {
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .card-pergunta p {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .lista-opcoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill-opcao {
+      background: #0d111c;
+      border: 1px solid var(--borda);
+      color: var(--texto-suave);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pill-opcao.selecionada {
+      background: var(--dourado);
+      color: #07090e;
+      border-color: var(--dourado);
+      font-weight: 800;
+    }
+
+    .cabecalho-nota {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .badge-nota-atual {
+      background: linear-gradient(135deg, var(--dourado), #fb8500);
+      color: #07090e;
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 4px 14px;
+      border-radius: 10px;
+    }
+
+    .range-nota {
+      width: 100%;
+      accent-color: var(--dourado);
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .escala-0-10 {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 6px;
+    }
+
+    .btn-nota {
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      color: var(--texto);
+      padding: 9px 0;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-nota.ativo {
+      background: var(--dourado);
+      color: #07090e;
+      border-color: var(--dourado);
+    }
+
+    textarea, input[type="email"], input[type="tel"] {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 13px 15px;
+      color: var(--texto);
+      font-family: inherit;
+      font-size: 0.94rem;
+      outline: none;
+    }
+
+    textarea:focus, input[type="email"]:focus, input[type="tel"]:focus {
+      border-color: var(--dourado);
+    }
+
+    .contador-texto {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--texto-suave);
+    }
+
+    .linha-contatos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .btn-confirmar {
+      width: 100%;
+      background: linear-gradient(135deg, var(--dourado) 0%, #fb8500 100%);
+      color: #07090e;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(251, 133, 0, 0.3);
+    }
+
+    .btn-confirmar:hover {
+      filter: brightness(1.07);
+    }
+
+    .aviso-status {
+      margin-top: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.92rem;
+      min-height: 22px;
+    }
+
+    /* MURAL */
+    .mural-opinioes {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--borda);
+    }
+
+    .mural-opinioes h3 {
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+    }
+
+    .grade-comentarios {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .card-comentario {
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .card-comentario-topo {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    .tag-veredito {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .tag-Bom { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-Regular { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag-Ruim { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    /* RODAPÉ COM NÚMERO DE CONTATO */
+    .rodape {
+      text-align: center;
+      padding: 28px 20px;
+      border-top: 1px solid var(--borda);
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+      background: rgba(10, 13, 22, 0.9);
+    }
+
+    .rodape a {
+      color: var(--dourado);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1080px) {
+      .vitrine-filmes {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .banner-filme-ativo {
+        grid-template-columns: 200px 1fr;
+      }
+      .box-termometro {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .vitrine-filmes {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .banner-filme-ativo {
+        grid-template-columns: 1fr;
+      }
+      .banner-poster {
+        max-width: 240px;
+        margin: 0 auto;
+      }
+      .grade-pesquisa-colunas, .linha-contatos {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header class="cabecalho">
+    <div class="container cabecalho-flex">
+      <div class="logo-area">
+        <div class="logo-icone">🎬</div>
+        <div class="logo-texto">
+          <h1>CINEPRIME OPINIÃO</h1>
+          <p>Avaliação interativa de filmes em cartaz nos cinemas</p>
+        </div>
+      </div>
+
+      <div class="contato-topo-box">
+        <a href="https://wa.me/5519971054743" target="_blank" rel="noopener noreferrer" class="btn-zap-contato">
+          💬 WhatsApp: (19) 97105-4743
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ETAPA 1: CARTAZES LADO A LADO -->
+    <div class="secao-header">
+      <h2><span class="numero-etapa">1</span> Escolha um filme em cartaz</h2>
+    </div>
+
+    <section class="vitrine-filmes" id="vitrine-filmes"></section>
+
+    <!-- ETAPA 2: DETALHES + TRAILER + TERMÔMETRO -->
+    <section class="banner-filme-ativo">
+      <div class="banner-poster">
+        <img id="poster-destaque" src="" alt="Cartaz do filme selecionado">
+        <span class="selo-idade" id="classificacao-destaque">14</span>
+      </div>
+
+      <div class="banner-detalhes">
+        <span class="tag-genero" id="genero-destaque">Ficção Científica</span>
+        <h3 id="titulo-destaque">Carregando filme...</h3>
+        <p id="sinopse-destaque"></p>
+
+        <div class="acoes-filme">
+          <a href="#" target="_blank" rel="noopener noreferrer" id="link-trailer" class="btn-trailer">
+            ▶ Assistir Trailer Oficial
+          </a>
+          <button type="button" class="btn-ir-pesquisa" onclick="document.getElementById('bloco-pesquisa').scrollIntoView({behavior: 'smooth'})">
+            ↓ Ir para Pesquisa Abaixo
+          </button>
+        </div>
+      </div>
+
+      <div class="box-termometro">
+        <h4>Avaliação da Plateia</h4>
+        <div class="score-grande">
+          <strong id="media-nota">9.2</strong>
+          <span>/ 10 (<span id="qtd-votos">0</span> votos)</span>
+        </div>
+
+        <div class="linha-barra">
+          <div class="linha-barra-texto"><span>🤩 Bom</span><span id="txt-bom">0%</span></div>
+          <div class="trilho-barra"><div class="preenchimento cor-bom" id="bar-bom"></div></div>
+        </div>
+        <div class="linha-barra">
+          <div class="linha-barra-texto"><span>🤔 Regular</span><span id="txt-regular">0%</span></div>
+          <div class="trilho-barra"><div class="preenchimento cor-regular" id="bar-regular"></div></div>
+        </div>
+        <div class="linha-barra">
+          <div class="linha-barra-texto"><span>😞 Ruim</span><span id="txt-ruim">0%</span></div>
+          <div class="trilho-barra"><div class="preenchimento cor-ruim" id="bar-ruim"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ETAPA 3: PESQUISA DE OPINIÃO EMBAIXO DE TUDO -->
+    <section class="secao-pesquisa-inferior" id="bloco-pesquisa">
+      <div class="topo-pesquisa">
+        <h2><span class="numero-etapa">2</span> Pesquisa de Opinião: <span id="titulo-form-filme"></span></h2>
+        <span style="color: var(--texto-suave); font-size: 0.85rem;">Campos com * são obrigatórios</span>
+      </div>
+
+      <form id="form-avaliacao">
+        <div class="grade-pesquisa-colunas">
+
+          <div>
+            <div class="bloco-campo">
+              <label class="label-campo">Avaliação geral do filme: *</label>
+              <div class="grupo-veredito">
+                <button type="button" class="btn-veredito" data-valor="Bom">
+                  <span class="icone-emoji">🤩</span>
+                  <strong>Bom</strong>
+                  <small>Vale muito a pena</small>
+                </button>
+                <button type="button" class="btn-veredito" data-valor="Regular">
+                  <span class="icone-emoji">🤔</span>
+                  <strong>Regular</strong>
+                  <small>Mais ou menos</small>
+                </button>
+                <button type="button" class="btn-veredito" data-valor="Ruim">
+                  <span class="icone-emoji">😞</span>
+                  <strong>Ruim</strong>
+                  <small>Não recomendo</small>
+                </button>
+              </div>
+              <input type="hidden" id="veredito-escolhido">
+            </div>
+
+            <div class="bloco-campo">
+              <label class="label-campo">Perguntas sobre este filme: *</label>
+              <div id="perguntas-dinamicas"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="bloco-campo">
+              <div class="cabecalho-nota">
+                <label for="slider-nota" class="label-campo" style="margin:0;">Nota de 0 a 10: *</label>
+                <span class="badge-nota-atual" id="valor-nota-visor">8</span>
+              </div>
+              <input type="range" id="slider-nota" class="range-nota" min="0" max="10" step="1" value="8">
+              <div class="escala-0-10" id="botoes-0-10"></div>
+            </div>
+
+            <div class="bloco-campo">
+              <div class="cabecalho-nota">
+                <label for="opiniao-extra" class="label-campo" style="margin:0;">Opinião extra (até 100 caracteres)</label>
+                <span class="contador-texto" id="contador-100">0 / 100</span>
+              </div>
+              <textarea id="opiniao-extra" maxlength="100" rows="2" placeholder="Escreva um comentário curto de até 100 caracteres..."></textarea>
+            </div>
+
+            <div class="bloco-campo linha-contatos">
+              <div>
+                <label for="input-email" class="label-campo">E-mail para contato: *</label>
+                <input type="email" id="input-email" placeholder="seuemail@exemplo.com" required>
+              </div>
+              <div>
+                <label for="input-whatsapp" class="label-campo">WhatsApp para contato: *</label>
+                <input type="tel" id="input-whatsapp" placeholder="(19) 97105-4743" maxlength="15" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-confirmar">Enviar Avaliação</button>
+            <div class="aviso-status" id="aviso-status"></div>
+          </div>
+
+        </div>
+      </form>
+
+      <div class="mural-opinioes">
+        <h3>Últimas opiniões enviadas</h3>
+        <div class="grade-comentarios" id="lista-comentarios"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <p>CinePrime Opinião &copy; 2026 — Contato e WhatsApp: <a href="https://wa.me/5519971054743" target="_blank" rel="noopener noreferrer">(19) 97105-4743</a></p>
+  </footer>
+
+  <script>
+    function criarPosterFallback(titulo, subtitulo, cor1, cor2) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="${cor1}"/>
+              <stop offset="100%" stop-color="${cor2}"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="600" fill="url(#g)"/>
+          <rect x="20" y="20" width="360" height="560" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="2"/>
+          <text x="200" y="75" fill="#ffd166" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="4">NOS CINEMAS</text>
+          <text x="200" y="300" fill="#ffffff" font-family="sans-serif" font-size="26" font-weight="bold" text-anchor="middle">${titulo}</text>
+          <text x="200" y="340" fill="rgba(255,255,255,0.8)" font-family="sans-serif" font-size="15" text-anchor="middle">${subtitulo}</text>
+          <text x="200" y="545" fill="rgba(255,255,255,0.7)" font-family="sans-serif" font-size="13" text-anchor="middle" letter-spacing="3">IMAX • 3D • DOLBY ATMOS</text>
+        </svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    const catalogoFilmes = [
+      {
+        titulo: "Duna: Parte Dois",
+        genero: "Ficção Científica / Épico",
+        classificacao: "14",
+        poster: "https://image.tmdb.org/t/p/w500/e8pI4XkYgUMuSJ8cEFbJE18wc4e.jpg",
+        fallback: criarPosterFallback("DUNA: PARTE DOIS", "O Destino de Arrakis", "#b45309", "#1e1b4b"),
+        trailer: "https://www.youtube.com/watch?v=U2Qp5pL3ovA",
+        sinopse: "Paul Atreides se une a Chani e aos Fremen em uma guerra épica pelo controle de Arrakis e do futuro do universo.",
+        perguntas: [
+          { texto: "O que você achou da fotografia e dos efeitos visuais do deserto?", opcoes: ["Espetacular", "Muito bom", "Normal"] },
+          { texto: "A duração de quase 3 horas prendeu sua atenção?", opcoes: ["Sim, passou voando", "Um pouco longo, mas ótimo", "Achei cansativo"] }
+        ],
+        votos: { Bom: 24, Regular: 3, Ruim: 1 },
+        notas: [10, 9, 9, 10, 8],
+        comentarios: [
+          { usuario: "carlos***@gmail.com", veredito: "Bom", nota: 10, texto: "Visual absurdo na tela grande do cinema!" }
+        ]
+      },
+      {
+        titulo: "Divertida Mente 2",
+        genero: "Animação / Família",
+        classificacao: "L",
+        poster: "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
+        fallback: criarPosterFallback("DIVERTIDA MENTE 2", "Novas Emoções na Mente", "#ea580c", "#4c1d95"),
+        trailer: "https://www.youtube.com/watch?v=LEjhY15eCx0",
+        sinopse: "Com a chegada da adolescência de Riley, novas emoções lideradas pela Ansiedade assumem a sala de controle.",
+        perguntas: [
+          { texto: "Qual nova emoção mais roubou a cena na história?", opcoes: ["Ansiedade", "Inveja", "Tédio", "Vergonha"] },
+          { texto: "Você acha que o filme emociona tanto adultos quanto crianças?", opcoes: ["Com certeza!", "Mais infantil", "Pouco emocionante"] }
+        ],
+        votos: { Bom: 32, Regular: 2, Ruim: 0 },
+        notas: [10, 9, 10, 9, 10],
+        comentarios: [
+          { usuario: "juliana***@hotmail.com", veredito: "Bom", nota: 10, texto: "A cena da Ansiedade representa perfeitamente a vida real." }
+        ]
+      },
+      {
+        titulo: "Deadpool & Wolverine",
+        genero: "Ação / Comédia",
+        classificacao: "18",
+        poster: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
+        fallback: criarPosterFallback("DEADPOOL & WOLVERINE", "A Dupla Mais Insana", "#b91c1c", "#ca8a04"),
+        trailer: "https://www.youtube.com/watch?v=73_1biulkYk",
+        sinopse: "Wade Wilson convoca um Wolverine relutante para uma missão multiversal cheia de ação e humor ácido.",
+        perguntas: [
+          { texto: "Como você avalia a química entre Deadpool e Wolverine?", opcoes: ["Perfeita e hilária", "Muito boa", "Forçada"] },
+          { texto: "As participações especiais surpreenderam o público na sua sessão?", opcoes: ["Sim, o cinema gritou!", "Foram legais", "Esperava mais"] }
+        ],
+        votos: { Bom: 28, Regular: 5, Ruim: 2 },
+        notas: [9, 8, 10, 8, 9],
+        comentarios: [
+          { usuario: "marcos***@gmail.com", veredito: "Bom", nota: 9, texto: "Diversão pura do começo ao fim, nostalgia demais!" }
+        ]
+      },
+      {
+        titulo: "Ainda Estou Aqui",
+        genero: "Drama / História Real",
+        classificacao: "14",
+        poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+        fallback: criarPosterFallback("AINDA ESTOU AQUI", "Uma História de Coragem", "#0f766e", "#0f172a"),
+        trailer: "https://www.youtube.com/watch?v=W8P1B_S9xI8",
+        sinopse: "Eunice Paiva precisa reinventar sua vida e defender sua família após um crime político mudar seu destino para sempre.",
+        perguntas: [
+          { texto: "Como você avalia a atuação de Fernanda Torres no filme?", opcoes: ["Inesquecível / Obra-prima", "Excelente", "Boa"] },
+          { texto: "A história emocionou você ao final da sessão?", opcoes: ["Muito emocionante", "Sim, bem forte", "Pouco"] }
+        ],
+        votos: { Bom: 35, Regular: 1, Ruim: 0 },
+        notas: [10, 10, 10, 9, 10],
+        comentarios: [
+          { usuario: "fernanda***@gmail.com", veredito: "Bom", nota: 10, texto: "Orgulho gigante do cinema nacional, atuação impecável." }
+        ]
+      },
+      {
+        titulo: "Planeta dos Macacos: O Reinado",
+        genero: "Aventura / Ficção",
+        classificacao: "14",
+        poster: "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
+        fallback: criarPosterFallback("PLANETA DOS MACACOS", "O Reinado", "#15803d", "#1e293b"),
+        trailer: "https://www.youtube.com/watch?v=XtFI7SNtVpY",
+        sinopse: "Gerações após César, um jovem chimpanzé empreende uma jornada que definirá o futuro de macacos e humanos.",
+        perguntas: [
+          { texto: "O realismo da captura de movimento impressionou você?", opcoes: ["Impressionante", "Muito bom", "Normal"] },
+          { texto: "Você gostaria de ver a continuação dessa nova trilogia?", opcoes: ["Com certeza", "Talvez", "Não"] }
+        ],
+        votos: { Bom: 19, Regular: 6, Ruim: 1 },
+        notas: [8, 9, 8, 7, 9],
+        comentarios: [
+          { usuario: "pedro***@outlook.com", veredito: "Bom", nota: 8, texto: "Efeitos visuais impressionantes e ótima aventura." }
+        ]
+      }
+    ];
+
+    let indiceAtual = 0;
+
+    function calcularMedia(notas) {
+      if (!notas.length) return "0.0";
+      return (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(1);
+    }
+
+    function carregarImagemSegura(imgEl, urlPrincipal, urlFallback) {
+      imgEl.onerror = function() {
+        this.onerror = null;
+        this.src = urlFallback;
+      };
+      imgEl.src = urlPrincipal;
+    }
+
+    function renderizarVitrine() {
+      const vitrine = document.getElementById("vitrine-filmes");
+      vitrine.innerHTML = "";
+
+      catalogoFilmes.forEach((filme, index) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `card-aba ${index === indiceAtual ? "ativo" : ""}`;
+        card.innerHTML = `
+          <div class="poster-wrapper">
+            <img src="${filme.poster}" alt="Cartaz ${filme.titulo}" onerror="this.onerror=null;this.src='${filme.fallback}'">
+          </div>
+          <div class="card-aba-corpo">
+            <div class="card-aba-titulo">${filme.titulo}</div>
+            <div class="card-aba-rodape">
+              <span>${filme.genero.split("/")[0].trim()}</span>
+              <span class="badge-nota-mini">★ ${calcularMedia(filme.notas)}</span>
+            </div>
+          </div>
+        `;
+        card.addEventListener("click", () => selecionarFilme(index));
+        vitrine.appendChild(card);
+      });
+    }
+
+    function selecionarFilme(index) {
+      indiceAtual = index;
+      const filme = catalogoFilmes[index];
+
+      document.querySelectorAll(".card-aba").forEach((c, i) => {
+        c.classList.toggle("ativo", i === index);
+      });
+
+      const posterDestaque = document.getElementById("poster-destaque");
+      carregarImagemSegura(posterDestaque, filme.poster, filme.fallback);
+
+      document.getElementById("classificacao-destaque").textContent = filme.classificacao;
+      document.getElementById("genero-destaque").textContent = filme.genero;
+      document.getElementById("titulo-destaque").textContent = filme.titulo;
+      document.getElementById("sinopse-destaque").textContent = filme.sinopse;
+      document.getElementById("link-trailer").href = filme.trailer;
+      document.getElementById("titulo-form-filme").textContent = filme.titulo;
+
+      const areaPerguntas = document.getElementById("perguntas-dinamicas");
+      areaPerguntas.innerHTML = "";
+      filme.perguntas.forEach((p, idx) => {
+        const div = document.createElement("div");
+        div.className = "card-pergunta";
+        div.innerHTML = `<p>${idx + 1}. ${p.texto}</p>`;
+        const opcoesDiv = document.createElement("div");
+        opcoesDiv.className = "lista-opcoes";
+
+        p.opcoes.forEach(op => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pill-opcao";
+          btn.textContent = op;
+          btn.addEventListener("click", () => {
+            opcoesDiv.querySelectorAll(".pill-opcao").forEach(el => el.classList.remove("selecionada"));
+            btn.classList.add("selecionada");
+          });
+          opcoesDiv.appendChild(btn);
+        });
+
+        div.appendChild(opcoesDiv);
+        areaPerguntas.appendChild(div);
+      });
+
+      atualizarTermometro(filme);
+      renderizarComentarios(filme);
+
+      document.getElementById("veredito-escolhido").value = "";
+      document.querySelectorAll(".btn-veredito").forEach(b => b.classList.remove("ativo"));
+      document.getElementById("aviso-status").textContent = "";
+    }
+
+    function atualizarTermometro(filme) {
+      const total = filme.votos.Bom + filme.votos.Regular + filme.votos.Ruim;
+      const pBom = total ? Math.round((filme.votos.Bom / total) * 100) : 0;
+      const pReg = total ? Math.round((filme.votos.Regular / total) * 100) : 0;
+      const pRuim = total ? Math.round((filme.votos.Ruim / total) * 100) : 0;
+
+      document.getElementById("media-nota").textContent = calcularMedia(filme.notas);
+      document.getElementById("qtd-votos").textContent = total;
+
+      document.getElementById("txt-bom").textContent = pBom + "%";
+      document.getElementById("bar-bom").style.width = pBom + "%";
+
+      document.getElementById("txt-regular").textContent = pReg + "%";
+      document.getElementById("bar-regular").style.width = pReg + "%";
+
+      document.getElementById("txt-ruim").textContent = pRuim + "%";
+      document.getElementById("bar-ruim").style.width = pRuim + "%";
+    }
+
+    function renderizarComentarios(filme) {
+      const lista = document.getElementById("lista-comentarios");
+      lista.innerHTML = "";
+      filme.comentarios.slice(0, 6).forEach(c => {
+        const card = document.createElement("div");
+        card.className = "card-comentario";
+        card.innerHTML = `
+          <div class="card-comentario-topo">
+            <span style="color: var(--texto-suave); font-weight: 600;">${c.usuario}</span>
+            <span class="tag-veredito tag-${c.veredito}">${c.veredito} • ★ ${c.nota}/10</span>
+          </div>
+          <p style="font-size: 0.9rem;">${c.texto}</p>
+        `;
+        lista.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll(".btn-veredito").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".btn-veredito").forEach(b => b.classList.remove("ativo"));
+        btn.classList.add("ativo");
+        document.getElementById("veredito-escolhido").value = btn.dataset.valor;
+      });
+    });
+
+    const containerNotas = document.getElementById("botoes-0-10");
+    const sliderNota = document.getElementById("slider-nota");
+    const visorNota = document.getElementById("valor-nota-visor");
+
+    for (let i = 0; i <= 10; i++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `btn-nota ${i === 8 ? "ativo" : ""}`;
+      b.textContent = i;
+      b.addEventListener("click", () => definirNota(i));
+      containerNotas.appendChild(b);
+    }
+
+    function definirNota(valor) {
+      sliderNota.value = valor;
+      visorNota.textContent = valor;
+      document.querySelectorAll(".btn-nota").forEach((b, idx) => {
+        b.classList.toggle("ativo", idx === Number(valor));
+      });
+    }
+
+    sliderNota.addEventListener("input", e => definirNota(e.target.value));
+
+    const opiniaoExtra = document.getElementById("opiniao-extra");
+    const contador100 = document.getElementById("contador-100");
+    opiniaoExtra.addEventListener("input", () => {
+      const len = opiniaoExtra.value.length;
+      contador100.textContent = `${len} / 100`;
+      contador100.style.color = len >= 90 ? "#ef4444" : "#94a3b8";
+    });
+
+    document.getElementById("input-whatsapp").addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      e.target.value = v;
+    });
+
+    document.getElementById("form-avaliacao").addEventListener("submit", e => {
+      e.preventDefault();
+      const veredito = document.getElementById("veredito-escolhido").value;
+      const aviso = document.getElementById("aviso-status");
+
+      if (!veredito) {
+        aviso.style.color = "#ef4444";
+        aviso.textContent = "Por favor, escolha Bom, Regular ou Ruim antes de enviar.";
+        return;
+      }
+
+      const filme = catalogoFilmes[indiceAtual];
+      const nota = Number(sliderNota.value);
+      const email = document.getElementById("input-email").value.trim();
+      const texto = opiniaoExtra.value.trim();
+
+      filme.votos[veredito]++;
+      filme.notas.push(nota);
+
+      const partesEmail = email.split("@");
+      const usuarioMascarado = `${partesEmail[0].slice(0, 3)}***@${partesEmail[1]}`;
+
+      filme.comentarios.unshift({
+        usuario: usuarioMascarado,
+        veredito,
+        nota,
+        texto: texto || `Classificou como ${veredito} com nota ${nota}/10.`
+      });
+
+      atualizarTermometro(filme);
+      renderizarComentarios(filme);
+      renderizarVitrine();
+
+      aviso.style.color = "#10b981";
+      aviso.textContent = `Avaliação enviada com sucesso para "${filme.titulo}"!`;
+      opiniaoExtra.value = "";
+      contador100.textContent = "0 / 100";
+    });
+
+    renderizarVitrine();
+    selecionarFilme(0);
+  </script>
+</body>
+</html>
